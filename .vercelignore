@@ -1,0 +1,17 @@
+.git
+.github
+.env
+.env.example
+.editorconfig
+.gitattributes
+node_modules
+tests
+README.md
+phpunit.xml
+vite.config.js
+package.json
+package-lock.json
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+storage/logs
