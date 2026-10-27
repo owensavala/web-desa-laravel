@@ -108,12 +108,33 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor Telepon / WhatsApp</label>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor Telepon / WhatsApp Kantor Desa</label>
                         <input type="text" name="telepon" value="{{ $footer->telepon }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Email Resmi Desa</label>
                         <input type="email" name="email" value="{{ $footer->email }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    </div>
+                </div>
+
+                <!-- Kontak Darurat Warga -->
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span class="text-xs font-bold text-slate-700 block uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-phone-volume text-rose-500"></i> Nomor Kontak Darurat Warga (Hotline Floating Widget)
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Polsek / Bhabinkamtibmas</label>
+                            <input type="text" name="kontak_darurat_polsek" value="{{ $footer->kontak_darurat_polsek ?? '0812-3456-7890' }}" placeholder="Contoh: 08123456789" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Puskesmas / Ambulans Desa</label>
+                            <input type="text" name="kontak_darurat_puskesmas" value="{{ $footer->kontak_darurat_puskesmas ?? '119 / (0927) 21119' }}" placeholder="Contoh: 119 / 0852xxxx" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Babinsa Koramil</label>
+                            <input type="text" name="kontak_darurat_babinsa" value="{{ $footer->kontak_darurat_babinsa ?? '0852-1840-3628' }}" placeholder="Contoh: 0852xxxx" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                        </div>
                     </div>
                 </div>
 

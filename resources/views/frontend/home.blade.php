@@ -260,22 +260,22 @@
 <!-- Layanan Mandiri CTA Banner -->
 <section class="py-20 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-gradient-to-r from-emerald-700 to-teal-800 rounded-3xl p-8 sm:p-14 text-white shadow-xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div class="bg-gradient-to-r from-emerald-800 to-teal-800 rounded-3xl p-8 sm:p-14 text-white shadow-xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
             <div class="max-w-xl">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/20 text-emerald-200 mb-4">
-                    <i class="fa-solid fa-bolt"></i> Pelayanan Cepat & Mudah
+                    <i class="fa-solid fa-bolt-lightning text-amber-300"></i> Pelayanan Digital Desa
                 </span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Butuh Surat Keterangan Desa?</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Layanan E-Surat Desa Online</h2>
                 <p class="text-emerald-100 text-sm sm:text-base leading-relaxed">
-                    Unduh blanko persyaratan permohonan surat seperti SKTM, Keterangan Domisili, Surat Izin Usaha, dan administrasi kependudukan lainnya tanpa antre lama.
+                    Kini warga dapat mengajukan permohonan surat keterangan (SKU, SKTM, Domisili, Pengantar SKCK, dll.) langsung dari handphone dan melacak status berkas secara realtime tanpa perlu bolak-balik antre.
                 </p>
             </div>
-            <div class="shrink-0 flex flex-col sm:flex-row gap-4">
-                <a href="{{ route('layanan.index') }}" class="px-7 py-4 rounded-xl bg-white text-emerald-900 font-extrabold text-sm hover:bg-emerald-50 transition-all shadow-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-download"></i> Unduh Formulir Surat
+            <div class="shrink-0 flex flex-col sm:flex-row gap-3">
+                <a href="{{ route('layanan.index', ['tab' => 'pengajuan']) }}" class="px-7 py-4 rounded-xl bg-white text-emerald-900 font-extrabold text-sm hover:bg-emerald-50 transition-all shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-signature text-emerald-700"></i> Ajukan Surat Online
                 </a>
-                <a href="{{ route('kritik-saran.index') }}" class="px-7 py-4 rounded-xl bg-emerald-900/60 hover:bg-emerald-900/80 text-white font-bold text-sm border border-emerald-500/40 transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-paper-plane"></i> Kirim Aspirasi Warga
+                <a href="{{ route('layanan.index', ['tab' => 'lacak']) }}" class="px-7 py-4 rounded-xl bg-emerald-950/70 hover:bg-emerald-950 text-white font-bold text-sm border border-emerald-400/30 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-emerald-300"></i> Lacak Status Berkas
                 </a>
             </div>
         </div>

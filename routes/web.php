@@ -36,6 +36,7 @@ Route::prefix('galeri')->group(function () {
 
 Route::prefix('layanan')->group(function () {
     Route::get('/', [LayananController::class, 'index'])->name('layanan.index');
+    Route::post('/permohonan', [LayananController::class, 'storePermohonan'])->name('layanan.permohonan.store');
     Route::get('/download/{id}', [LayananController::class, 'download'])->name('layanan.download');
 });
 
@@ -99,10 +100,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/galeri/video', [AdminDashboardController::class, 'videoStore'])->name('galeri.video.store');
         Route::delete('/galeri/video/{id}', [AdminDashboardController::class, 'videoDestroy'])->name('galeri.video.destroy');
 
-        // Layanan
+        // Layanan & Permohonan Surat Online
         Route::get('/layanan', [AdminDashboardController::class, 'layanan'])->name('layanan.index');
         Route::post('/layanan/store', [AdminDashboardController::class, 'layananStore'])->name('layanan.store');
         Route::delete('/layanan/delete/{id}', [AdminDashboardController::class, 'layananDestroy'])->name('layanan.destroy');
+        Route::get('/layanan/permohonan', [AdminDashboardController::class, 'permohonanIndex'])->name('layanan.permohonan.index');
+        Route::post('/layanan/permohonan/{id}/status', [AdminDashboardController::class, 'permohonanUpdateStatus'])->name('layanan.permohonan.status');
+        Route::delete('/layanan/permohonan/{id}', [AdminDashboardController::class, 'permohonanDestroy'])->name('layanan.permohonan.destroy');
 
         // Saran
         Route::get('/saran', [AdminDashboardController::class, 'saran'])->name('saran.index');

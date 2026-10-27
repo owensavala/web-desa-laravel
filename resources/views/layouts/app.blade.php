@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Website Resmi ' . ($globalFooter->nama_desa ?? 'Desa Kupal') . ' - ' . ($globalFooter->kabupaten ?? 'Halmahera Selatan'))</title>
     
+    <!-- SEO & Social Media Meta Tags -->
+    <meta name="description" content="@yield('meta_description', 'Website Resmi Pemerintah ' . ($globalFooter->nama_desa ?? 'Desa Kupal') . ', ' . ($globalFooter->kecamatan ?? 'Kecamatan Bacan Selatan') . ', ' . ($globalFooter->kabupaten ?? 'Halmahera Selatan') . '. Layanan mandiri permohonan surat online, berita, transparansi APBDes, dan informasi kependudukan.')">
+    <meta property="og:title" content="@yield('title', 'Website Resmi ' . ($globalFooter->nama_desa ?? 'Desa Kupal'))">
+    <meta property="og:description" content="@yield('meta_description', 'Portal informasi dan pelayanan publik digital Pemerintah ' . ($globalFooter->nama_desa ?? 'Desa Kupal'))">
+    <meta property="og:image" content="@yield('meta_image', asset('images/' . ($globalFooter->logo_desa ?? 'logo.png')))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="{{ $c['600'] ?? '#059669' }}">
+    <link rel="canonical" href="{{ url()->current() }}">
+    
     @php
         $themeColor = $globalFooter->tema_warna ?? 'emerald';
         $themePalettes = [
@@ -66,8 +77,18 @@
             --color-emerald-900: {{ $c['900'] }};
             --color-emerald-950: {{ $c['950'] }};
         }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: font-size 0.2s ease; }
         .hero-gradient { background: linear-gradient(135deg, {{ $c['900'] }} 0%, {{ $c['700'] }} 100%); }
+        html.font-lg { font-size: 18px; }
+        html.font-xl { font-size: 20px; }
+        html.high-contrast { filter: contrast(125%) saturate(110%); }
+        html.high-contrast body { background-color: #f8fafc; color: #020617; }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 28s linear infinite; }
+        .animate-marquee:hover { animation-play-state: paused; }
     </style>
 
     <!-- Tailwind CSS CDN -->
@@ -107,6 +128,42 @@
     @stack('styles')
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Top Utility & Accessibility Bar -->
+    <div class="bg-slate-900 text-slate-300 text-[11px] py-1.5 px-4 border-b border-slate-800">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5 font-medium text-slate-300">
+                    <i class="fa-regular fa-calendar text-emerald-400"></i>
+                    {{ now()->translatedFormat('l, d F Y') }}
+                </span>
+                <span class="hidden sm:inline-block text-slate-600">•</span>
+                <span class="hidden sm:flex items-center gap-1.5 text-slate-400">
+                    <i class="fa-solid fa-clock text-emerald-400"></i> Pelayanan: Sen - Jum (08:00 - 15:30 WIT)
+                </span>
+            </div>
+
+            <!-- Accessibility Controls & Hotline -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-700/60">
+                    <span class="text-slate-400 mr-1 text-[10px] hidden md:inline">Aksesibilitas:</span>
+                    <button onclick="changeFontSize('normal')" title="Ukuran Font Normal" class="px-1.5 py-0.2 hover:text-emerald-400 font-bold transition-colors">A</button>
+                    <button onclick="changeFontSize('lg')" title="Perbesar Tulisan" class="px-1.5 py-0.2 hover:text-emerald-400 font-bold text-xs transition-colors">A+</button>
+                    <button onclick="changeFontSize('xl')" title="Tulisan Ekstra Besar" class="px-1.5 py-0.2 hover:text-emerald-400 font-black text-sm transition-colors">A++</button>
+                    <span class="text-slate-600">|</span>
+                    <button onclick="toggleContrast()" title="Mode Kontras Tinggi" class="px-1 hover:text-amber-400 transition-colors">
+                        <i class="fa-solid fa-circle-half-stroke"></i>
+                    </button>
+                </div>
+
+                @if($globalFooter?->telepon)
+                <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $globalFooter->telepon) }}" target="_blank" class="hidden md:flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
+                    <i class="fa-brands fa-whatsapp text-xs"></i> Hotline: {{ $globalFooter->telepon }}
+                </a>
+                @endif
+            </div>
+        </div>
+    </div>
 
     <!-- Top Announcement Bar (Running Ticker) -->
     @php
@@ -413,12 +470,160 @@
         </div>
     </footer>
 
-    <!-- Mobile Menu Script -->
+    <!-- Floating Citizen Action Hub & WhatsApp Widget -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3" id="citizen-floating-hub">
+        
+        <!-- Back To Top Button -->
+        <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-10 h-10 rounded-full bg-white text-slate-700 shadow-lg border border-slate-200 flex items-center justify-center hover:bg-emerald-50 hover:text-emerald-700 transition-all opacity-0 pointer-events-none translate-y-3" title="Kembali ke Atas">
+            <i class="fa-solid fa-arrow-up text-sm"></i>
+        </button>
+
+        <!-- Popup Menu Box -->
+        <div id="hub-menu-popup" class="hidden w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden transform transition-all duration-200 mb-2">
+            
+            <!-- Popup Header -->
+            <div class="bg-gradient-to-r from-emerald-800 to-teal-700 p-5 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-lg">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm leading-tight">Pusat Layanan Warga</h4>
+                            <span class="text-[11px] text-emerald-200">{{ $globalFooter->nama_desa ?? 'Pemerintah Desa Kupal' }}</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleCitizenHub()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Popup Menu Items -->
+            <div class="p-4 space-y-2.5 max-h-[420px] overflow-y-auto text-xs">
+                
+                <!-- Chat WhatsApp -->
+                @php
+                    $waClean = preg_replace('/[^0-9]/', '', $globalFooter->telepon ?? '085218403628');
+                    if (str_starts_with($waClean, '0')) {
+                        $waClean = '62' . substr($waClean, 1);
+                    }
+                @endphp
+                <a href="https://api.whatsapp.com/send?phone={{ $waClean }}&text={{ urlencode('Halo Admin Pemerintah ' . ($globalFooter->nama_desa ?? 'Desa Kupal') . ', saya warga ingin bertanya perihal layanan...') }}" target="_blank" class="flex items-center gap-3 p-3 rounded-2xl bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200/80 transition-colors group">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-slate-800 block text-xs">Chat WhatsApp Petugas</span>
+                        <span class="text-slate-500 text-[11px]">Respon cepat pada jam pelayanan kantor</span>
+                    </div>
+                </a>
+
+                <!-- Permohonan E-Surat Online -->
+                <a href="{{ route('layanan.index') }}" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 border border-slate-100 transition-colors group">
+                    <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-slate-800 block text-xs">Pengajuan Surat Online</span>
+                        <span class="text-slate-500 text-[11px]">Buat surat keterangan & lacak status berkas</span>
+                    </div>
+                </a>
+
+                <!-- Kritik & Pengaduan -->
+                <a href="{{ route('kritik-saran.index') }}" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 border border-slate-100 transition-colors group">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-slate-800 block text-xs">Aspirasi & Pengaduan Warga</span>
+                        <span class="text-slate-500 text-[11px]">Sampaikan saran langsung ke pemerintah desa</span>
+                    </div>
+                </a>
+
+                <!-- Hotline Panggilan Darurat -->
+                <div class="pt-2 border-t border-slate-100">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 block mb-2 px-1">
+                        <i class="fa-solid fa-phone-volume mr-1"></i> Kontak Darurat 24 Jam:
+                    </span>
+                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                        <a href="tel:{{ preg_replace('/[^0-9]/', '', $globalFooter->kontak_darurat_puskesmas ?? '119') }}" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 font-bold flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-truck-medical text-rose-600"></i> Puskesmas / 119
+                        </a>
+                        <a href="tel:{{ preg_replace('/[^0-9]/', '', $globalFooter->kontak_darurat_polsek ?? '110') }}" class="p-2 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-bold flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-shield text-blue-600"></i> Polsek / 110
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Main Floating Hub Trigger Button -->
+        <button onclick="toggleCitizenHub()" class="relative flex items-center gap-3 px-4 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-700/30 font-bold text-xs transition-all hover:scale-105 group border-2 border-white">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
+            </span>
+            <i class="fa-solid fa-comments text-base"></i>
+            <span class="hidden sm:inline-block">Layanan Warga</span>
+        </button>
+
+    </div>
+
+    <!-- Scripts: Accessibility, Floating Hub & Back To Top -->
     <script>
+        // Mobile Drawer Menu
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         btn?.addEventListener('click', () => {
             menu.classList.toggle('hidden');
+        });
+
+        // Floating Hub Toggle
+        function toggleCitizenHub() {
+            const popup = document.getElementById('hub-menu-popup');
+            popup?.classList.toggle('hidden');
+        }
+
+        // Accessibility: Font Resizer
+        function changeFontSize(size) {
+            const html = document.documentElement;
+            html.classList.remove('font-lg', 'font-xl');
+            if (size === 'lg') html.classList.add('font-lg');
+            if (size === 'xl') html.classList.add('font-xl');
+            localStorage.setItem('desa_font_size', size);
+        }
+
+        // Accessibility: Contrast Toggle
+        function toggleContrast() {
+            const html = document.documentElement;
+            html.classList.toggle('high-contrast');
+            localStorage.setItem('desa_contrast', html.classList.contains('high-contrast') ? 'high' : 'normal');
+        }
+
+        // Restore user accessibility settings
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedSize = localStorage.getItem('desa_font_size');
+            if (savedSize) changeFontSize(savedSize);
+
+            const savedContrast = localStorage.getItem('desa_contrast');
+            if (savedContrast === 'high') {
+                document.documentElement.classList.add('high-contrast');
+            }
+
+            // Back to Top button scroll handler
+            const btt = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 350) {
+                    btt?.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-3');
+                    btt?.classList.add('opacity-100', 'translate-y-0');
+                } else {
+                    btt?.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
+                    btt?.classList.remove('opacity-100', 'translate-y-0');
+                }
+            });
         });
     </script>
     @stack('scripts')

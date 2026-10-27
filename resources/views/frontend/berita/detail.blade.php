@@ -1,32 +1,40 @@
 @extends('layouts.app')
 
-@section('title', $berita->judul . ' - Desa Kupal')
+@section('title', $berita->judul . ' - ' . ($globalFooter->nama_desa ?? 'Desa Kupal'))
+@section('meta_description', Str::limit(strip_tags($berita->isi), 160))
+@if($berita->gambar)
+    @section('meta_image', asset('images/' . $berita->gambar))
+@endif
 
 @section('content')
 <!-- Detail Berita Header -->
-<section class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white py-14">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+<section class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white py-14 relative overflow-hidden">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl relative z-10">
         <div class="flex items-center gap-3 text-xs text-emerald-300 font-semibold mb-3">
             <a href="{{ route('home') }}" class="hover:underline">Beranda</a>
             <span>/</span>
-            <a href="{{ route('berita.index') }}" class="hover:underline">Berita</a>
+            <a href="{{ route('berita.index') }}" class="hover:underline">Berita Desa</a>
             <span>/</span>
-            <span class="text-white">Detail</span>
+            <span class="text-white truncate max-w-xs">{{ Str::limit($berita->judul, 30) }}</span>
         </div>
         <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight">
             {{ $berita->judul }}
         </h1>
-        <div class="flex flex-wrap items-center gap-4 text-xs text-emerald-200 mt-4">
-            <span><i class="fa-regular fa-calendar-days mr-1.5"></i> {{ $berita->tanggal_posting ? $berita->tanggal_posting->translatedFormat('l, d F Y') : date('d M Y') }}</span>
+        <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-emerald-200 mt-4">
+            <span><i class="fa-regular fa-calendar-days mr-1.5 text-amber-300"></i> {{ $berita->tanggal_posting ? $berita->tanggal_posting->translatedFormat('l, d F Y') : date('d M Y') }}</span>
             <span>•</span>
-            <span><i class="fa-solid fa-user-pen mr-1.5"></i> Administrator Desa Kupal</span>
+            <span><i class="fa-solid fa-user-pen mr-1.5 text-emerald-300"></i> Administrator Desa</span>
             <span>•</span>
-            <span><i class="fa-regular fa-eye mr-1.5"></i> {{ $berita->views }} kali dibaca</span>
+            <span><i class="fa-regular fa-eye mr-1.5 text-emerald-300"></i> {{ $berita->views }} kali dibaca</span>
+            <span>•</span>
+            <span class="bg-emerald-800/80 px-2.5 py-0.5 rounded-full font-semibold text-emerald-100">
+                <i class="fa-regular fa-clock mr-1"></i> {{ max(1, round(str_word_count(strip_tags($berita->isi)) / 180)) }} Menit Baca
+            </span>
         </div>
     </div>
 </section>
 
-<section class="py-14">
+<section class="py-14 bg-slate-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         
         <!-- Main Article Container -->
@@ -40,22 +48,40 @@
             @endif
 
             <!-- Article Body -->
-            <div class="prose prose-slate max-w-none text-slate-700 text-base sm:text-lg leading-relaxed font-light space-y-5">
+            <div class="prose prose-slate max-w-none text-slate-700 text-base sm:text-lg leading-relaxed font-normal space-y-5">
                 {!! nl2br(e($berita->isi)) !!}
             </div>
 
-            <!-- Share & Tag Section -->
+            <!-- Share & Action Section -->
             <div class="pt-8 mt-10 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
                 <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Bagikan Artikel Ini:
+                    Bagikan Informasi Ini:
                 </div>
-                <div class="flex items-center gap-2">
-                    <a href="https://api.whatsapp.com/send?text={{ urlencode($berita->judul . ' ' . url()->current()) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 hover:bg-emerald-600 transition-colors">
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- WhatsApp -->
+                    <a href="https://api.whatsapp.com/send?text={{ urlencode($berita->judul . ' - ' . url()->current()) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 hover:bg-emerald-600 shadow-sm transition-colors">
                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
                     </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold flex items-center gap-1.5 hover:bg-blue-700 transition-colors">
+
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold flex items-center gap-1.5 hover:bg-blue-700 shadow-sm transition-colors">
                         <i class="fa-brands fa-facebook-f text-sm"></i> Facebook
                     </a>
+
+                    <!-- Telegram -->
+                    <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($berita->judul) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-sky-500 text-white text-xs font-bold flex items-center gap-1.5 hover:bg-sky-600 shadow-sm transition-colors">
+                        <i class="fa-brands fa-telegram text-sm"></i> Telegram
+                    </a>
+
+                    <!-- Salin Tautan -->
+                    <button onclick="copyCurrentUrl()" id="btn-copy-link" class="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors border border-slate-200">
+                        <i class="fa-regular fa-copy text-sm"></i> <span id="copy-label">Salin Link</span>
+                    </button>
+
+                    <!-- Cetak Artikel -->
+                    <button onclick="window.print()" class="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors border border-slate-200" title="Cetak Berita">
+                        <i class="fa-solid fa-print text-sm"></i> Cetak
+                    </button>
                 </div>
             </div>
 
@@ -95,4 +121,16 @@
 
     </div>
 </section>
+
+<script>
+    function copyCurrentUrl() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            const label = document.getElementById('copy-label');
+            label.innerText = 'Tersalin!';
+            setTimeout(() => {
+                label.innerText = 'Salin Link';
+            }, 2500);
+        });
+    }
+</script>
 @endsection

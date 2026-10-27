@@ -13,6 +13,7 @@ use App\Models\FooterSetting;
 use App\Models\GaleriFoto;
 use App\Models\GaleriVideo;
 use App\Models\Pengumuman;
+use App\Models\PermohonanSurat;
 use App\Models\ProfilDesa;
 use App\Models\Slider;
 use App\Models\Sotk;
@@ -33,12 +34,15 @@ class AdminDashboardController extends Controller
             'saran_baru' => KritikSaran::where('status', 'baru')->count(),
             'total_foto' => GaleriFoto::count(),
             'total_aparatur' => Sotk::count(),
+            'total_permohonan' => PermohonanSurat::count(),
+            'permohonan_menunggu' => PermohonanSurat::where('status', 'menunggu')->count(),
         ];
 
         $beritaTerbaru = Berita::orderBy('id', 'desc')->take(5)->get();
         $saranTerbaru = KritikSaran::orderBy('id', 'desc')->take(5)->get();
+        $permohonanTerbaru = PermohonanSurat::orderBy('id', 'desc')->take(5)->get();
 
-        return view('admin.dashboard', compact('stats', 'beritaTerbaru', 'saranTerbaru'));
+        return view('admin.dashboard', compact('stats', 'beritaTerbaru', 'saranTerbaru', 'permohonanTerbaru'));
     }
 
     // ================= BERITA =================
@@ -530,5 +534,53 @@ class AdminDashboardController extends Controller
 
         Admin::where('id_admin', $id)->delete();
         return redirect()->route('admin.pengguna.index')->with('success', 'Administrator berhasil dihapus.');
+    }
+
+    // ================= PERMOHONAN SURAT ONLINE =================
+    public function permohonanIndex(Request $request)
+    {
+        $status = $request->query('status');
+        $query = PermohonanSurat::orderBy('id', 'desc');
+
+        if ($status && in_array($status, ['menunggu', 'diproses', 'selesai', 'ditolak'])) {
+            $query->where('status', $status);
+        }
+
+        $permohonanList = $query->paginate(15)->withQueryString();
+        $counts = [
+            'all' => PermohonanSurat::count(),
+            'menunggu' => PermohonanSurat::where('status', 'menunggu')->count(),
+            'diproses' => PermohonanSurat::where('status', 'diproses')->count(),
+            'selesai' => PermohonanSurat::where('status', 'selesai')->count(),
+            'ditolak' => PermohonanSurat::where('status', 'ditolak')->count(),
+        ];
+
+        return view('admin.layanan.permohonan', compact('permohonanList', 'counts', 'status'));
+    }
+
+    public function permohonanUpdateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:menunggu,diproses,selesai,ditolak',
+            'catatan_petugas' => 'nullable|string|max:500',
+        ]);
+
+        $permohonan = PermohonanSurat::findOrFail($id);
+        $permohonan->status = $request->status;
+        $permohonan->catatan_petugas = $request->catatan_petugas;
+        if ($request->status === 'selesai' && !$permohonan->tanggal_selesai) {
+            $permohonan->tanggal_selesai = now();
+        }
+        $permohonan->save();
+
+        return redirect()->back()->with('success', "Status permohonan {$permohonan->kode_tracking} berhasil diperbarui.");
+    }
+
+    public function permohonanDestroy($id)
+    {
+        $permohonan = PermohonanSurat::findOrFail($id);
+        $permohonan->delete();
+
+        return redirect()->back()->with('success', 'Data permohonan surat berhasil dihapus.');
     }
 }

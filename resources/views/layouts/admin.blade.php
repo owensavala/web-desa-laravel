@@ -97,8 +97,12 @@
 
             <div class="pt-4 pb-1 px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Layanan & Partisipasi</div>
 
-            <a href="{{ route('admin.layanan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all {{ request()->routeIs('admin.layanan*') ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                <i class="fa-solid fa-file-arrow-down w-5 text-center"></i> Dokumen Layanan
+            <a href="{{ route('admin.layanan.permohonan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all {{ request()->routeIs('admin.layanan.permohonan*') ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                <i class="fa-solid fa-file-signature w-5 text-center"></i> Permohonan E-Surat
+            </a>
+
+            <a href="{{ route('admin.layanan.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all {{ request()->routeIs('admin.layanan.index') ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                <i class="fa-solid fa-file-arrow-down w-5 text-center"></i> Blanko Dokumen
             </a>
 
             <a href="{{ route('admin.saran.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all {{ request()->routeIs('admin.saran*') ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
