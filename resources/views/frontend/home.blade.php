@@ -98,9 +98,13 @@
             </div>
             <div>
                 <span class="block text-xl sm:text-2xl font-extrabold text-slate-900">
-                    Rp {{ number_format(($apbdes->total_pendapatan ?? 100000000) / 1000000, 0) }} Jt
+                    @if(($apbdes->total_pendapatan ?? 0) >= 1000000000)
+                        Rp {{ number_format(($apbdes->total_pendapatan) / 1000000000, 2, ',', '.') }} M
+                    @else
+                        Rp {{ number_format(($apbdes->total_pendapatan ?? 0) / 1000000, 0, ',', '.') }} Jt
+                    @endif
                 </span>
-                <span class="text-xs sm:text-sm text-slate-500 font-medium">APBDes {{ $apbdes->tahun ?? 2025 }}</span>
+                <span class="text-xs sm:text-sm text-slate-500 font-medium">APBDes {{ $apbdes->tahun ?? 2026 }}</span>
             </div>
         </div>
 

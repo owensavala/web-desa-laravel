@@ -204,7 +204,7 @@
                 
                 <!-- Logo & Brand -->
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                    @if($globalFooter?->logo_desa && file_exists(public_path('images/' . $globalFooter->logo_desa)))
+                    @if(!empty($globalFooter?->logo_desa))
                         <div class="w-12 h-12 rounded-xl bg-white p-1 shadow-md border border-slate-100 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform">
                             <img src="{{ asset('images/' . $globalFooter->logo_desa) }}" alt="Logo" class="max-w-full max-h-full object-contain">
                         </div>
@@ -358,7 +358,7 @@
                 <!-- Col 1: Identitas Desa -->
                 <div>
                     <div class="flex items-center gap-3 mb-5">
-                        @if($globalFooter?->logo_desa && file_exists(public_path('images/' . $globalFooter->logo_desa)))
+                        @if(!empty($globalFooter?->logo_desa))
                             <div class="w-12 h-12 rounded-xl bg-white p-1 shadow-lg flex items-center justify-center overflow-hidden">
                                 <img src="{{ asset('images/' . $globalFooter->logo_desa) }}" alt="Logo" class="max-w-full max-h-full object-contain">
                             </div>
