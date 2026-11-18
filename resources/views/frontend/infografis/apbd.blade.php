@@ -21,7 +21,7 @@
                 <h3 class="font-extrabold text-slate-900 text-lg">Pilih Tahun Anggaran</h3>
                 <p class="text-xs text-slate-500">Melihat data transparansi anggaran APBDes per tahun</p>
             </div>
-            <form action="{{ route('infografis.apbd') }}" method="GET" class="flex items-center gap-2">
+            <form method="GET" class="flex items-center gap-2">
                 <select name="tahun" onchange="this.form.submit()" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     @foreach($years as $yr)
                         <option value="{{ $yr }}" {{ ($summary?->tahun == $yr) ? 'selected' : '' }}>Tahun {{ $yr }}</option>

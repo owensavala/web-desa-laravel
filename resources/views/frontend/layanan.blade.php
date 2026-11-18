@@ -253,7 +253,7 @@
                     <p class="text-xs sm:text-sm text-slate-500 mt-1">Masukkan <strong>Kode Tracking</strong> yang Anda peroleh saat pengajuan atau nomor <strong>NIK</strong> Anda.</p>
                 </div>
 
-                <form action="{{ route('layanan.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3">
+                <form method="GET" class="flex flex-col sm:flex-row gap-3">
                     <input type="hidden" name="tab" value="lacak">
                     <div class="relative flex-grow">
                         <i class="fa-solid fa-barcode text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>

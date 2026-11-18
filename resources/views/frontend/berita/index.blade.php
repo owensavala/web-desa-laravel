@@ -20,7 +20,7 @@
             <div class="lg:col-span-8">
                 
                 <!-- Search bar for mobile / desktop -->
-                <form action="{{ route('berita.index') }}" method="GET" class="mb-8">
+                <form method="GET" class="mb-8">
                     <div class="relative">
                         <input 
                             type="text" 
