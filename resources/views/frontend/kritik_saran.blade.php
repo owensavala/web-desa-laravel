@@ -4,24 +4,32 @@
 
 @section('content')
 <!-- Header Banner -->
-<section class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white py-16">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <span class="text-emerald-300 font-bold text-xs uppercase tracking-widest block mb-2">Partisipasi Warga</span>
-        <h1 class="text-3xl sm:text-4xl font-extrabold">Kotak Aspirasi, Kritik & Saran</h1>
-        <p class="text-emerald-100 text-sm sm:text-base mt-2 max-w-2xl">Sampaikan masukan, pengaduan, atau apresiasi untuk kemajuan pembangunan dan peningkatan pelayanan Desa Kupal.</p>
+<section class="relative bg-gradient-to-r from-emerald-950 via-teal-900 to-sky-950 text-white py-16 sm:py-20 overflow-hidden">
+    <div class="absolute inset-0 opacity-15 mix-blend-overlay pointer-events-none">
+        <img src="{{ asset('images/1769446350_kantor desa.jpg') }}" alt="Kantor Desa Kupal" class="w-full h-full object-cover">
+    </div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 font-bold text-xs uppercase tracking-widest mb-3">
+            <i class="fa-solid fa-bullhorn"></i> Partisipasi Warga
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white">Kotak Aspirasi & Aduan Warga</h1>
+        <p class="text-emerald-100/90 text-sm sm:text-base mt-2 max-w-2xl leading-relaxed">Sampaikan masukan konstruktif, pengaduan fasilitas, atau apresiasi untuk kemajuan pembangunan dan transparansi pelayanan Desa Kupal.</p>
     </div>
 </section>
 
-<section class="py-16">
+<section class="py-16 bg-slate-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             
             <!-- Form Kirim Saran -->
-            <div class="lg:col-span-7 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-sm">
+            <div class="lg:col-span-7 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-sm hover:shadow-lg transition-shadow">
                 <div class="flex items-center gap-3 text-emerald-600 font-bold text-xs uppercase tracking-widest mb-3">
-                    <i class="fa-solid fa-paper-plane"></i> Form Pengaduan & Aspirasi
+                    <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </span>
+                    Form Pengaduan & Aspirasi Digital
                 </div>
-                <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Sampaikan Suara Anda</h2>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-6">Sampaikan Suara Anda</h2>
 
                 <form action="{{ route('kritik-saran.store') }}" method="POST" class="space-y-6">
                     @csrf
@@ -34,7 +42,7 @@
                             id="nama" 
                             value="{{ old('nama') }}" 
                             required 
-                            placeholder="Contoh: Warga Dusun 1 / Nama Anda"
+                            placeholder="Contoh: Warga Dusun 1 / Nama Lengkap Anda"
                             class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 @error('nama') border-rose-500 @enderror"
                         >
                         @error('nama')
@@ -49,7 +57,7 @@
                             id="komentar" 
                             rows="5" 
                             required 
-                            placeholder="Tuliskan pesan Anda secara jelas, sopan, dan membangun..."
+                            placeholder="Tuliskan pesan Anda secara jelas, santun, dan membangun untuk kemajuan Desa Kupal..."
                             class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 @error('komentar') border-rose-500 @enderror"
                         >{{ old('komentar') }}</textarea>
                         @error('komentar')
@@ -57,8 +65,8 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="w-full py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> Kirimkan Aspirasi Sekarang
+                    <button type="submit" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-sm shadow-xl shadow-emerald-700/20 hover:shadow-emerald-700/30 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-paper-plane text-amber-300"></i> Kirimkan Aspirasi Sekarang
                     </button>
                 </form>
             </div>

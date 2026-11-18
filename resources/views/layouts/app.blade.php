@@ -79,17 +79,48 @@
             --color-emerald-950: {{ $c['950'] }};
         }
         body { font-family: 'Plus Jakarta Sans', sans-serif; transition: font-size 0.2s ease; }
-        .hero-gradient { background: linear-gradient(135deg, {{ $c['900'] }} 0%, {{ $c['700'] }} 100%); }
+        .hero-gradient { background: linear-gradient(135deg, {{ $c['900'] }} 0%, #0f172a 50%, #0369a1 100%); }
         html.font-lg { font-size: 18px; }
         html.font-xl { font-size: 20px; }
         html.high-contrast { filter: contrast(125%) saturate(110%); }
         html.high-contrast body { background-color: #f8fafc; color: #020617; }
+        
+        /* Smooth marquee ticker with relaxed reading pace */
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
-        .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 28s linear infinite; }
-        .animate-marquee:hover { animation-play-state: paused; }
+        .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 60s linear infinite; }
+        .animate-marquee:hover, .marquee-paused { animation-play-state: paused !important; }
+
+        /* Modern Glassmorphism & Soft Shadows */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .tri-gradient-text {
+            background: linear-gradient(135deg, #059669 0%, #0284c7 50%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-shimmer {
+            background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%);
+        }
+        .card-lift {
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+        }
     </style>
 
     <!-- Tailwind CSS CDN -->
@@ -175,25 +206,38 @@
     @endphp
 
     @if($announcements->count() > 0)
-    <div class="bg-emerald-950 text-emerald-200 text-xs py-2 px-4 shadow-sm border-b border-emerald-900/60 flex items-center">
-        <div class="container mx-auto flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2 font-semibold shrink-0 bg-emerald-800/80 px-2.5 py-0.5 rounded-full text-white text-[11px]">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                <i class="fa-solid fa-bullhorn text-amber-300"></i> PENGUMUMAN
+    <div class="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-slate-200 text-xs py-2 px-4 shadow-md border-b border-emerald-800/40 relative z-40">
+        <div class="container mx-auto flex items-center justify-between gap-3">
+            
+            <!-- Amber-Gold Announcement Pill -->
+            <div class="flex items-center gap-2 font-black shrink-0 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 px-3 py-1 rounded-full text-[11px] shadow-sm uppercase tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-slate-950 animate-ping"></span>
+                <i class="fa-solid fa-bullhorn text-xs"></i> <span>PENGUMUMAN</span>
             </div>
-            <div class="overflow-hidden whitespace-nowrap w-full">
-                <div class="inline-block animate-marquee pl-4 hover:pause">
+
+            <!-- Ticker Scrolling Track -->
+            <div class="overflow-hidden whitespace-nowrap w-full relative">
+                <div id="announcement-track" class="inline-block animate-marquee pl-4 hover:pause cursor-pointer" title="Arahkan mouse untuk menjeda teks">
                     @foreach($announcements as $ann)
-                        <span class="mr-12 font-medium">
-                            <i class="fa-solid fa-circle-dot text-[8px] text-emerald-400 mr-2"></i>
+                        <span class="mr-16 font-medium text-slate-100 hover:text-amber-300 transition-colors">
+                            <i class="fa-solid fa-circle-dot text-[8px] text-sky-400 mr-2"></i>
                             {{ $ann->judul }}
+                            <i class="fa-solid fa-diamond text-[6px] text-amber-400 ml-6"></i>
                         </span>
                     @endforeach
                 </div>
             </div>
-            <div class="hidden md:flex items-center gap-3 shrink-0 text-emerald-300">
-                <span class="text-[11px]"><i class="fa-regular fa-clock mr-1"></i> {{ now()->translatedFormat('l, d F Y') }}</span>
+
+            <!-- Ticker Control & Date (Tri-Color Accents) -->
+            <div class="hidden md:flex items-center gap-3 shrink-0 text-slate-300 text-[11px]">
+                <button onclick="toggleMarquee()" id="ticker-pause-btn" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 flex items-center justify-center transition-colors" title="Jeda / Putar Teks">
+                    <i class="fa-solid fa-pause text-[10px]" id="ticker-pause-icon"></i>
+                </button>
+                <span class="text-sky-300 font-medium border-l border-slate-700 pl-3">
+                    <i class="fa-regular fa-clock mr-1 text-amber-400"></i> {{ now()->translatedFormat('d F Y') }}
+                </span>
             </div>
+
         </div>
     </div>
     @endif
@@ -586,6 +630,22 @@
         function toggleCitizenHub() {
             const popup = document.getElementById('hub-menu-popup');
             popup?.classList.toggle('hidden');
+        }
+
+        // Announcement Ticker Pause/Play Toggle
+        let isMarqueePaused = false;
+        function toggleMarquee() {
+            const track = document.getElementById('announcement-track');
+            const icon = document.getElementById('ticker-pause-icon');
+            if (!track) return;
+            isMarqueePaused = !isMarqueePaused;
+            if (isMarqueePaused) {
+                track.classList.add('marquee-paused');
+                if (icon) { icon.classList.remove('fa-pause'); icon.classList.add('fa-play'); }
+            } else {
+                track.classList.remove('marquee-paused');
+                if (icon) { icon.classList.remove('fa-play'); icon.classList.add('fa-pause'); }
+            }
         }
 
         // Accessibility: Font Resizer

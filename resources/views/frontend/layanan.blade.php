@@ -4,29 +4,34 @@
 
 @section('content')
 <!-- Header Banner -->
-<section class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white py-14 lg:py-18 relative overflow-hidden">
-    <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+<section class="relative bg-slate-950 text-white py-16 lg:py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center opacity-25 transform scale-105" 
+         style="background-image: url('{{ asset('images/1769446350_kantor desa.jpg') }}');">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-emerald-950/90 to-sky-950/85"></div>
+    <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-amber-500/15 blur-3xl pointer-events-none"></div>
+
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-700/50 text-emerald-200 font-bold text-xs uppercase tracking-wider mb-3 border border-emerald-600/40">
-            <i class="fa-solid fa-bolt-lightning text-amber-300"></i> Pelayanan Publik Digital Desa
+        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider mb-3 shadow-md">
+            <i class="fa-solid fa-bolt-lightning text-slate-950"></i> Pelayanan Publik Digital Desa
         </span>
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
             Layanan Mandiri & E-Surat Warga
         </h1>
-        <p class="text-emerald-100/90 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed">
+        <p class="text-slate-200 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed font-light">
             Ajukan permohonan surat keterangan secara online dari rumah, lacak proses penyelesaian berkas secara transparan, atau unduh blanko persyaratan resmi Pemerintah {{ $globalFooter->nama_desa ?? 'Desa Kupal' }}.
         </p>
 
-        <!-- Navigation Tabs -->
+        <!-- Navigation Tabs (Tri-Color Modern Tabs) -->
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 mt-8">
-            <a href="{{ route('layanan.index', ['tab' => 'pengajuan']) }}" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all {{ ($tab ?? 'pengajuan') === 'pengajuan' ? 'bg-white text-emerald-900 shadow-lg scale-105' : 'bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 border border-emerald-700' }}">
-                <i class="fa-solid fa-file-signature text-emerald-600"></i> Buat Pengajuan Surat
+            <a href="{{ route('layanan.index', ['tab' => 'pengajuan']) }}" class="px-6 py-3 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 transition-all {{ ($tab ?? 'pengajuan') === 'pengajuan' ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 shadow-xl scale-105' : 'bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-white/15' }}">
+                <i class="fa-solid fa-file-signature text-sm"></i> Buat Pengajuan Surat
             </a>
-            <a href="{{ route('layanan.index', ['tab' => 'lacak']) }}" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all {{ ($tab ?? 'pengajuan') === 'lacak' ? 'bg-white text-emerald-900 shadow-lg scale-105' : 'bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 border border-emerald-700' }}">
-                <i class="fa-solid fa-magnifying-glass text-emerald-600"></i> Lacak Status Surat
+            <a href="{{ route('layanan.index', ['tab' => 'lacak']) }}" class="px-6 py-3 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 transition-all {{ ($tab ?? 'pengajuan') === 'lacak' ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 shadow-xl scale-105' : 'bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-white/15' }}">
+                <i class="fa-solid fa-barcode text-sm"></i> Lacak Status Surat
             </a>
-            <a href="{{ route('layanan.index', ['tab' => 'unduh']) }}" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all {{ ($tab ?? 'pengajuan') === 'unduh' ? 'bg-white text-emerald-900 shadow-lg scale-105' : 'bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 border border-emerald-700' }}">
-                <i class="fa-solid fa-folder-open text-emerald-600"></i> Unduh Blanko Dokumen
+            <a href="{{ route('layanan.index', ['tab' => 'unduh']) }}" class="px-6 py-3 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 transition-all {{ ($tab ?? 'pengajuan') === 'unduh' ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 shadow-xl scale-105' : 'bg-slate-900/70 hover:bg-slate-800 text-slate-200 border border-white/15' }}">
+                <i class="fa-solid fa-folder-open text-sm"></i> Unduh Blanko Dokumen
             </a>
         </div>
     </div>
